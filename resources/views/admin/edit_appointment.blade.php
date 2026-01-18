@@ -9,77 +9,98 @@
     </div>
 @endif
 
-<form id="appointmentForm" action="{{ route('update_appointment', $patient->id) }}" method="POST" style="text-align:center;">
+<form id="appointmentForm"
+      action="{{ route('update_appointment', $patient->id) }}"
+      method="POST"
+      style="max-width:650px; margin:0 auto;">
     @csrf
-    @method('PUT') <!-- This makes it a PUT request -->
+    @method('PUT')
 
     <input type="hidden" name="patient_id" value="{{ $patient->id }}">
 
-    <!-- Patient Info (read-only) -->
-    <input type="text" value="{{ $patient->full_name }}" readonly>
-    <input type="text" value="{{ $patient->ic }}" readonly>
+    <!-- Full Name -->
+    <div style="margin-bottom:15px;">
+        <label class="text-muted small">Full Name</label>
+        <input type="text"
+               value="{{ $patient->full_name }}"
+               readonly
+               style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc; background:#f5f5f5;">
+    </div>
 
-    <!-- Doctor Selection -->
-    <select name="doctor_id" required>
-        <option selected disabled>Select Doctor</option>
-        @foreach($doctors as $doctor)
-            <option value="{{ $doctor->id }}" @if($patient->doctor_id == $doctor->id) selected @endif>
-                {{ $doctor->doctors_name }}
-            </option>
-        @endforeach
-    </select>
+    <!-- IC Number -->
+    <div style="margin-bottom:20px;">
+        <label class="text-muted small">IC Number</label>
+        <input type="text"
+               value="{{ $patient->ic }}"
+               readonly
+               style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc; background:#f5f5f5;">
+    </div>
+
+    <!-- Assigned Doctor -->
+    <div style="margin-bottom:15px;">
+        <label class="text-muted small">Assigned Doctor</label>
+        <select name="doctor_id"
+                required
+                style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc;">
+            <option disabled>Select Doctor</option>
+            @foreach($doctors as $doctor)
+                <option value="{{ $doctor->id }}" @selected($patient->doctor_id == $doctor->id)>
+                    {{ $doctor->doctors_name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
     <!-- Appointment Date -->
-    <input type="date" name="appointment_date" value="{{ $patient->appointment_date }}" required>
+    <div style="margin-bottom:15px;">
+        <label class="text-muted small">Appointment Date</label>
+        <input type="date"
+               name="appointment_date"
+               value="{{ $patient->appointment_date }}"
+               required
+               style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc;">
+    </div>
 
     <!-- Time Slot -->
-    <select name="time_slot" required>
-        @foreach(['9:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM','2:00 PM - 3:00 PM'] as $slot)
-            <option value="{{ $slot }}" @if($patient->time_slot == $slot) selected @endif>{{ $slot }}</option>
-        @endforeach
-    </select>
+    <div style="margin-bottom:25px;">
+        <label class="text-muted small">Time Slot</label>
+        <select name="time_slot"
+                required
+                style="width:100%; padding:12px; border-radius:12px; border:1px solid #ccc;">
+            @foreach(['9:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM','2:00 PM - 3:00 PM'] as $slot)
+                <option value="{{ $slot }}" @selected($patient->time_slot == $slot)>
+                    {{ $slot }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-    <button type="submit">Update Appointment</button>
-</form>
+    <!-- Buttons -->
+    <div style="display:flex; justify-content:space-between; align-items:center;">
 
+        <!-- Back -->
+        <a href="{{ route('view_appointment') }}"
+           style="background:#9e9e9e; color:white; padding:12px 25px;
+                  border-radius:12px; text-decoration:none;">
+            Back
+        </a>
 
-<!-- Modal for options -->
-<div id="confirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
-    <div style="background:white; padding:30px; border-radius:12px; text-align:center; max-width:400px; box-shadow:0 4px 15px rgba(0,0,0,0.25);">
-        <h3 style="margin-bottom:20px;">What would you like to do?</h3>
-        <button onclick="submitForm('pdf')" style="margin-bottom:10px; background:#4da3dd; color:white; padding:10px 20px; border:none; border-radius:12px; cursor:pointer; width:100%;">Print PDF</button>
-        <button onclick="submitForm('email')" style="margin-bottom:10px; background:#2ecc71; color:white; padding:10px 20px; border:none; border-radius:12px; cursor:pointer; width:100%;">Send Email</button>
-        <button onclick="submitForm('none')" style="background:#e74c3c; color:white; padding:10px 20px; border:none; border-radius:12px; cursor:pointer; width:100%;">No Thanks</button>
-        <div style="margin-top:10px;">
-            <a href="#" onclick="closeModal()" style="color:#555; text-decoration:underline; cursor:pointer;">Cancel</a>
+        <!-- Right Buttons -->
+        <div style="display:flex; gap:15px;">
+            <button type="submit"
+                    style="background:#4da3dd; color:white; padding:12px 25px;
+                           border:none; border-radius:12px; cursor:pointer;">
+                Confirm
+            </button>
+
+            <a href="{{ route('view_patients') }}"
+               onclick="return confirm('Discard changes and go back?')"
+               style="background:#FF4C4C; color:white; padding:12px 25px;
+                      border-radius:12px; text-decoration:none;">
+                Cancel
+            </a>
         </div>
     </div>
-</div>
-
-<script>
-function showConfirmOptions() {
-    document.getElementById('confirmModal').style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('confirmModal').style.display = 'none';
-}
-
-function submitForm(action) {
-    let form = document.getElementById('appointmentForm');
-
-    // remove existing hidden input if any
-    let existing = form.querySelector('input[name="post_confirm_action"]');
-    if(existing) existing.remove();
-
-    let input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'post_confirm_action';
-    input.value = action;
-    form.appendChild(input);
-
-    form.submit();
-}
-</script>
+</form>
 
 @endsection

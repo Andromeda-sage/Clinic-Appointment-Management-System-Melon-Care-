@@ -73,7 +73,7 @@
 
                             <td>
                                 <div style="display:flex; gap:10px; justify-content:center;"></div>
-                                    <a href="{{ route('create_appointment', $appointment->id) }}" 
+                                    <a href="{{ route('edit_appointment', $appointment->id) }}" 
                                        class="bg bg-primary" 
                                        style="display:inline-block; padding:10px 15px; border-radius:10px; background:#4da3dd; color:white; text-decoration:none;">
                                         Edit

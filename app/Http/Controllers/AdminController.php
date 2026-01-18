@@ -258,6 +258,17 @@ public function storeAppointment(Request $request)
     return redirect()->back()->with('success', 'Patient added successfully!');
 }
 
+public function deletePatient($id)
+{
+    $appointment = Appointment::find($id);
+
+    if (!$appointment) {
+        return redirect()->back()->with('error', 'Patient not found.');
+    }
+
+    $appointment->delete();
+    return redirect()->back()->with('success', 'Patient deleted successfully.');
+}
 
 
 }

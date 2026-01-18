@@ -53,7 +53,8 @@
             <th>IC Number</th>
             <th>Phone Number</th>
             <th>Email</th>
-            <th> </th>
+            <th>Make Appointment</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -63,12 +64,31 @@
             <td>{{ $patient->ic }}</td>
             <td>{{ $patient->number }}</td>
             <td>{{ $patient->email_address }}</td>
-            <td>
-                <a href="{{ route('create_appointment', $patient->id) }}"
-                   style="display:inline-block; padding:8px 20px; background:#4da3dd; color:white; border-radius:12px; text-decoration:none; font-weight:bold; transition:0.3s;">
-                   SELECT
-                </a>
-            </td>
+<td>
+    <div style="display:flex; gap:10px; justify-content:center;">
+
+        <!-- SELECT -->
+        <a href="{{ route('create_appointment', $patient->id) }}"
+           style="display:inline-block; padding:8px 20px; background:#4da3dd;
+                  color:white; border-radius:12px; text-decoration:none; font-weight:bold;">
+            SELECT
+        </a>
+            </div>
+</td>
+<td>
+    <div style="display:flex; gap:10px; justify-content:center;">
+        <!-- DELETE -->
+        <a href="{{ route('delete_patient', $patient->id) }}"
+           style="display:inline-block; padding:8px 15px; background:#ff6b6b;
+                  color:white; border-radius:12px; text-decoration:none;"
+           onclick="return confirm('Are you sure you want to delete this patient?')">
+            DELETE
+        </a>
+</div>
+</td>
+    </div>
+</td>
+
         </tr>
         @empty
         <tr>

@@ -45,6 +45,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Appointments management
     Route::get('/view_appointment', [AdminController::class,'viewAppointment'])->name('view_appointment');
     Route::get('/view_patients', [AdminController::class,'viewPatients'])->name('view_patients');
+    Route::get('/delete_patient/{id}', [AdminController::class, 'deletePatient'])
+     ->name('delete_patient');
     Route::get('/request', [AdminController::class, 'request'])->name('request');
     Route::get('/appointment/edit/{id}', [AppointmentController::class, 'edit'])->name('create_appointment');
     Route::post('/appointment/update/{id}', [AppointmentController::class, 'update'])->name('update_appointment');

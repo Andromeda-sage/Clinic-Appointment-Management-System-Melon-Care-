@@ -80,7 +80,7 @@
     <div style="width:80%; margin:auto; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
 
         <!-- Back -->
-        <a href="{{ route('view_appointment') }}"
+        <a href="{{ route('view_patients') }}"
            style="background:#9e9e9e; color:white; padding:12px 25px;
                   border-radius:12px; text-decoration:none;">
             Back
